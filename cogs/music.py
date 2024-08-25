@@ -37,6 +37,16 @@ class Music(commands.Cog):
     async def cog_command_error(self, ctx: commands.Context, error: commands.CommandError):
         await ctx.send('An error occurred: {}'.format(str(error)))
 
+    # TODO: There is a problem with states apparently, sometimes when
+    # bot leaves channel (because there is no song), something weird happens 
+    # and when you try playing another song it doesn't join channel and plays it...
+    # sometimes even bot joins channel but dont play the song requested
+    @commands.command(name='v_check', invoke_without_subcommand=True)
+    async def v_check(self, ctx: commands.Context):
+        print(self.voice_states.values())
+        for state in self.voice_states.values():
+            print(state)
+
     @commands.hybrid_command(name='join', invoke_without_subcommand=True, help='Tells the bot to join the voice channel')
     async def _join(self, ctx: commands.Context):
         """Joins a voice channel."""
@@ -75,12 +85,12 @@ class Music(commands.Cog):
             return await ctx.send('Not connected to any voice channel.')
 
         await ctx.voice_state.stop()
+        await ctx.send('Leaving channel', delete_after=1)
         del self.voice_states[ctx.guild.id]
 
     @commands.hybrid_command(name='volume', help='Sets the volume of the player')
     async def _volume(self, ctx: commands.Context, *, volume: int):
         """Sets the volume of the player."""
-        volume = int(volume)
 
         if not ctx.voice_state.is_playing:
             return await ctx.send('Nothing being played at the moment.')
