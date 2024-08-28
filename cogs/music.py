@@ -37,16 +37,6 @@ class Music(commands.Cog):
     async def cog_command_error(self, ctx: commands.Context, error: commands.CommandError):
         await ctx.send('An error occurred: {}'.format(str(error)))
 
-    # TODO: There is a problem with states apparently, sometimes when
-    # bot leaves channel (because there is no song), something weird happens 
-    # and when you try playing another song it doesn't join channel and plays it...
-    # sometimes even bot joins channel but dont play the song requested
-    @commands.command(name='v_check', invoke_without_subcommand=True)
-    async def v_check(self, ctx: commands.Context):
-        print(self.voice_states.values())
-        for state in self.voice_states.values():
-            print(state)
-
     @commands.hybrid_command(name='join', invoke_without_subcommand=True, help='Tells the bot to join the voice channel')
     async def _join(self, ctx: commands.Context):
         """Joins a voice channel."""
@@ -255,7 +245,16 @@ class Music(commands.Cog):
         if ctx.voice_client:
             if ctx.voice_client.channel != ctx.author.voice.channel:
                 raise commands.CommandError('Bot is already in a voice channel.')
-            
+    
+    @commands.Cog.listener()
+    async def on_voice_state_update(self, member: discord.Member, before: discord.VoiceState, after: discord.VoiceState):
+        # below code checks voice_states dict and removes voice_state when bot
+        # left channel due to inactivity, without this code when bot leaves due
+        # to inactivty and you queue new song bot will use old voice state and will not
+        # play new song.
+        if before.channel is not None and after.channel is None:
+            if member.guild.id in self.voice_states.keys():
+                del self.voice_states[member.guild.id]
 
 async def setup(bot: commands.Bot) -> None:
     await bot.add_cog(Music(bot))
