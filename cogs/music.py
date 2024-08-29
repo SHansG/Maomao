@@ -220,7 +220,7 @@ class Music(commands.Cog):
 
     @commands.hybrid_command(name='play')
     async def _play(self, ctx: commands.Context, *, search: str):
-
+        """Plays requested song from URL or searches for song using provided input string"""
 
         if not ctx.voice_state.voice:
             await ctx.invoke(self._join)
