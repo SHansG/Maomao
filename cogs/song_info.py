@@ -19,10 +19,10 @@ class Song_Info(commands.Cog):
     async def cog_command_error(self, ctx: commands.Context, error: commands.CommandError):
         await ctx.send('An error occurred: {}'.format(str(error)))
 
-    @commands.hybrid_command(name='join', invoke_without_subcommand=True, help='Tells the bot to join the voice channel')
-    async def _song_title(self, ctx: commands.Context, *, search: str):
+    @commands.hybrid_command(name='title', invoke_without_subcommand=True, help='Gets song title from spotify url')
+    async def _song_title(self, ctx: commands.Context, *, url: str):
         """Gets song title from spotify url."""
-        title=self.scrapper.get_song_title(search)
+        title=self.scrapper.get_song_title(url)
         if title is None:
             title="URL not supported"
-        ctx.send(title)
+        await ctx.send(title)
