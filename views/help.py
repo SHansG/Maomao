@@ -37,7 +37,7 @@ class HelpView(discord.ui.View):
                 inline=True
             )
 
-            update = "Maomao is a simple, multirole bot. It's in development phase so it doesn't provide many features."
+            update = "Maomao is a simple, multirole bot. It's in early development phase."
             embed.add_field(name="📰 Information:", value=update, inline=True)
             embed.add_field(name="Get Started", value="```Join a voice channel and /play {Song/URL} a song. (Names, Youtube Video Links or Playlist links or Spotify links are supported on Vocard)```", inline=False)
             
