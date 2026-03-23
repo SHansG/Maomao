@@ -1,9 +1,0 @@
-{
-    "prefix": "!",
-    "activity": [
-        {"play":"Immortal"},
-        {"listen":"24/7"}
-    ],
-    "embed_color":"0x4b19bf",
-    "version":"0.0.1"
-}
